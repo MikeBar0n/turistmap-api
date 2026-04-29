@@ -1,6 +1,6 @@
 # TuristMap API 🗺️
 
-API REST para el proyecto TuristMap desarrollada por el equipo TricodeV2M.
+API para el proyecto TuristMap desarrollada por el equipo TricodeV2M.
 
 ## Equipo de desarrollo
 
