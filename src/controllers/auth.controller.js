@@ -38,6 +38,10 @@ const login = async (req, res) => {
   try {
     const { email, password } = req.body;
 
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son obligatorios.' });
+    }
+
     const usuario = await User.findOne({ email }).select('+password');
     if (!usuario) {
       return res.status(401).json({ message: 'Credenciales inválidas.' });
@@ -46,6 +50,10 @@ const login = async (req, res) => {
     const passwordValida = await usuario.compararPassword(password);
     if (!passwordValida) {
       return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    if (!usuario.activo) {
+      return res.status(403).json({ message: 'Usuario inactivo.' });
     }
 
     const token = generarToken(usuario._id);
