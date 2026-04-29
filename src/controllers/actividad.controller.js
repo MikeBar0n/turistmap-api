@@ -17,4 +17,19 @@ const obtenerActividades = async (req, res) => {
   }
 };
 
-module.exports = { obtenerActividades };
+const obtenerActividadPorId = async (req, res) => {
+  try {
+    const actividad = await Actividad.findById(req.params.id)
+      .populate('destino', 'nombre ubicacion')
+      .populate('creadoPor', 'nombre email');
+
+    if (!actividad || !actividad.activo) {
+      return res.status(404).json({ message: 'Actividad no encontrada.' });
+    }
+    res.json({ actividad });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener actividad.', error: error.message });
+  }
+};
+
+module.exports = { obtenerActividades, obtenerActividadPorId };
