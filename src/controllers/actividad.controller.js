@@ -44,4 +44,36 @@ const crearActividad = async (req, res) => {
   }
 };
 
-module.exports = { obtenerActividades, obtenerActividadPorId, crearActividad };
+const actualizarActividad = async (req, res) => {
+  try {
+    const actividad = await Actividad.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true, runValidators: true }
+    );
+    if (!actividad) {
+      return res.status(404).json({ message: 'Actividad no encontrada.' });
+    }
+    res.json({ message: 'Actividad actualizada.', actividad });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar actividad.', error: error.message });
+  }
+};
+
+const eliminarActividad = async (req, res) => {
+  try {
+    const actividad = await Actividad.findByIdAndUpdate(
+      req.params.id,
+      { activo: false },
+      { new: true }
+    );
+    if (!actividad) {
+      return res.status(404).json({ message: 'Actividad no encontrada.' });
+    }
+    res.json({ message: 'Actividad eliminada correctamente.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar actividad.', error: error.message });
+  }
+};
+
+module.exports = { obtenerActividades, obtenerActividadPorId, crearActividad, actualizarActividad, eliminarActividad };
