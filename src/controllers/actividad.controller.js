@@ -17,7 +17,6 @@ const obtenerActividades = async (req, res) => {
   }
 };
 
-<<<<<<< HEAD
 const obtenerActividadPorId = async (req, res) => {
   try {
     const actividad = await Actividad.findById(req.params.id)
@@ -33,7 +32,16 @@ const obtenerActividadPorId = async (req, res) => {
   }
 };
 
-module.exports = { obtenerActividades, obtenerActividadPorId };
-=======
-module.exports = { obtenerActividades };
->>>>>>> origin/ValentinaCañon
+const crearActividad = async (req, res) => {
+  try {
+    const actividad = await Actividad.create({
+      ...req.body,
+      creadoPor: req.usuario._id,
+    });
+    res.status(201).json({ message: 'Actividad creada exitosamente.', actividad });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al crear actividad.', error: error.message });
+  }
+};
+
+module.exports = { obtenerActividades, obtenerActividadPorId, crearActividad };
