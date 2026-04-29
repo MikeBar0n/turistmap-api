@@ -34,4 +34,59 @@ const registro = async (req, res) => {
   }
 };
 
-module.exports = { registro };
+const login = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+      return res.status(400).json({ message: 'Email y contraseña son obligatorios.' });
+    }
+
+    const usuario = await User.findOne({ email }).select('+password');
+    if (!usuario) {
+      return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    const passwordValida = await usuario.compararPassword(password);
+    if (!passwordValida) {
+      return res.status(401).json({ message: 'Credenciales inválidas.' });
+    }
+
+    if (!usuario.activo) {
+      return res.status(403).json({ message: 'Usuario inactivo.' });
+    }
+
+    const token = generarToken(usuario._id);
+
+    res.json({
+      message: 'Inicio de sesión exitoso.',
+      token,
+      usuario: {
+        id: usuario._id,
+        nombre: usuario.nombre,
+        email: usuario.email,
+        rol: usuario.rol,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al iniciar sesión.', error: error.message });
+  }
+};
+
+const perfil = async (req, res) => {
+  try {
+    res.json({
+      usuario: {
+        id: req.usuario._id,
+        nombre: req.usuario.nombre,
+        email: req.usuario.email,
+        rol: req.usuario.rol,
+        creadoEn: req.usuario.createdAt,
+      },
+    });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener perfil.', error: error.message });
+  }
+};
+
+module.exports = { registro, login, perfil };

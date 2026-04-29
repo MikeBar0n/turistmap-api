@@ -37,6 +37,15 @@ app.get('/', (req, res) => {
   });
 });
 
+app.use((req, res) => {
+  res.status(404).json({ message: 'Ruta no encontrada' });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Error interno del servidor', error: err.message });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`🚀 Servidor TuristMap corriendo en el puerto ${PORT}`);
