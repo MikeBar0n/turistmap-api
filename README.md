@@ -5,10 +5,10 @@ API REST para el proyecto TuristMap desarrollada por el equipo TricodeV2M.
 ## Equipo de desarrollo
 
 | Usuario GitHub | Integrante | Rol |
-|---|---|---|
-| `ValentinaTangarife` | Valentina Tangarife | Front-end |
-| `ValentinaCañon` | Valentina Cañon | Back-end |
-| `MichaelBaron` | Michael Baron | Integración / QA |
+|---|---|
+| `valen-0310` | Valentina Tangarife |
+| `ValentinaVelandia` | Valentina Cañon |
+| `MikeBar0n` | Michael Baron |
 
 ## Tecnologías
 
@@ -21,7 +21,6 @@ API REST para el proyecto TuristMap desarrollada por el equipo TricodeV2M.
 ## Instalación
 
 ```bash
-git clone https://github.com/USUARIO/turistmap-api.git
 cd turistmap-api
 npm install
 cp .env.example .env
