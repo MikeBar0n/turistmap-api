@@ -15,3 +15,32 @@ const obtenerDestinos = async (req, res) => {
 };
 
 module.exports = { obtenerDestinos };
+const Destino = require('../models/Destino.model');
+
+const obtenerDestinos = async (req, res) => {
+  try {
+    const { categoria, ciudad } = req.query;
+    const filtro = { activo: true };
+    if (categoria) filtro.categoria = categoria;
+    if (ciudad) filtro['ubicacion.ciudad'] = new RegExp(ciudad, 'i');
+
+    const destinos = await Destino.find(filtro).populate('creadoPor', 'nombre email');
+    res.json({ total: destinos.length, destinos });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener destinos.', error: error.message });
+  }
+};
+
+const obtenerDestinoPorId = async (req, res) => {
+  try {
+    const destino = await Destino.findById(req.params.id).populate('creadoPor', 'nombre email');
+    if (!destino || !destino.activo) {
+      return res.status(404).json({ message: 'Destino no encontrado.' });
+    }
+    res.json({ destino });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al obtener destino.', error: error.message });
+  }
+};
+
+module.exports = { obtenerDestinos, obtenerDestinoPorId };
