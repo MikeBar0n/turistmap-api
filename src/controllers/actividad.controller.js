@@ -17,6 +17,7 @@ const obtenerActividades = async (req, res) => {
   }
 };
 
+<<<<<<< HEAD
 const obtenerActividadPorId = async (req, res) => {
   try {
     const actividad = await Actividad.findById(req.params.id)
@@ -33,3 +34,6 @@ const obtenerActividadPorId = async (req, res) => {
 };
 
 module.exports = { obtenerActividades, obtenerActividadPorId };
+=======
+module.exports = { obtenerActividades };
+>>>>>>> origin/ValentinaCañon
