@@ -44,4 +44,20 @@ const crearItinerario = async (req, res) => {
   }
 };
 
-module.exports = { obtenerItinerarios, obtenerItinerarioPorId, crearItinerario };
+const actualizarItinerario = async (req, res) => {
+  try {
+    const itinerario = await Itinerario.findById(req.params.id);
+    if (!itinerario || !itinerario.activo) {
+      return res.status(404).json({ message: 'Itinerario no encontrado.' });
+    }
+    if (req.usuario.rol !== 'administrador' && itinerario.usuario.toString() !== req.usuario._id.toString()) {
+      return res.status(403).json({ message: 'No tienes permiso para editar este itinerario.' });
+    }
+    const actualizado = await Itinerario.findByIdAndUpdate(req.params.id, req.body, { new: true, runValidators: true });
+    res.json({ message: 'Itinerario actualizado.', itinerario: actualizado });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al actualizar itinerario.', error: error.message });
+  }
+};
+
+module.exports = { obtenerItinerarios, obtenerItinerarioPorId, crearItinerario, actualizarItinerario };
