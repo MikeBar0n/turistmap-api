@@ -12,9 +12,7 @@ const obtenerUsuarios = async (req, res) => {
 const obtenerUsuarioPorId = async (req, res) => {
   try {
     const usuario = await User.findById(req.params.id).select('-password');
-    if (!usuario || !usuario.activo) {
-      return res.status(404).json({ message: 'Usuario no encontrado.' });
-    }
+    if (!usuario || !usuario.activo) return res.status(404).json({ message: 'Usuario no encontrado.' });
     res.json({ usuario });
   } catch (error) {
     res.status(500).json({ message: 'Error al obtener usuario.', error: error.message });
@@ -25,9 +23,7 @@ const actualizarUsuario = async (req, res) => {
   try {
     const { nombre, email } = req.body;
     const datosActualizar = { nombre, email };
-    if (req.usuario.rol === 'administrador' && req.body.rol) {
-      datosActualizar.rol = req.body.rol;
-    }
+    if (req.usuario.rol === 'administrador' && req.body.rol) datosActualizar.rol = req.body.rol;
     const usuario = await User.findByIdAndUpdate(req.params.id, datosActualizar, { new: true, runValidators: true }).select('-password');
     if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado.' });
     res.json({ message: 'Usuario actualizado.', usuario });
@@ -36,4 +32,14 @@ const actualizarUsuario = async (req, res) => {
   }
 };
 
-module.exports = { obtenerUsuarios, obtenerUsuarioPorId, actualizarUsuario };
+const eliminarUsuario = async (req, res) => {
+  try {
+    const usuario = await User.findByIdAndUpdate(req.params.id, { activo: false }, { new: true });
+    if (!usuario) return res.status(404).json({ message: 'Usuario no encontrado.' });
+    res.json({ message: 'Usuario eliminado correctamente.' });
+  } catch (error) {
+    res.status(500).json({ message: 'Error al eliminar usuario.', error: error.message });
+  }
+};
+
+module.exports = { obtenerUsuarios, obtenerUsuarioPorId, actualizarUsuario, eliminarUsuario };
