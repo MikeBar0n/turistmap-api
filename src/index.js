@@ -6,6 +6,8 @@ const connectDB = require('./config/database');
 const authRoutes = require('./routes/auth.routes');
 const userRoutes = require('./routes/user.routes');
 const destinoRoutes = require('./routes/destino.routes');
+const actividadRoutes = require('./routes/actividad.routes');
+const itinerarioRoutes = require('./routes/itinerario.routes');
 
 const app = express();
 
@@ -17,6 +19,8 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/users', userRoutes);
 app.use('/api/destinos', destinoRoutes);
+app.use('/api/actividades', actividadRoutes);
+app.use('/api/itinerarios', itinerarioRoutes);
 
 app.get('/', (req, res) => {
   res.json({
@@ -27,8 +31,19 @@ app.get('/', (req, res) => {
       auth: '/api/auth',
       users: '/api/users',
       destinos: '/api/destinos',
+      actividades: '/api/actividades',
+      itinerarios: '/api/itinerarios',
     },
   });
+});
+
+app.use((req, res) => {
+  res.status(404).json({ message: 'Ruta no encontrada' });
+});
+
+app.use((err, req, res, next) => {
+  console.error(err.stack);
+  res.status(500).json({ message: 'Error interno del servidor', error: err.message });
 });
 
 const PORT = process.env.PORT || 3000;
